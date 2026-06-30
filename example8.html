@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Table Generator</title>
+
+    <style>
+        *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f172a,#1d4ed8,#3b82f6);
+    padding:20px;
+}
+
+.container{
+    width:650px;
+    max-width:100%;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.4);
+    color:white;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    font-size:30px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:8px;
+    font-weight:bold;
+    font-size:18px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:none;
+    outline:none;
+    border-radius:8px;
+    font-size:17px;
+}
+
+input:focus{
+    box-shadow:0 0 8px #60a5fa;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:25px;
+}
+
+button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+button:hover{
+    transform:translateY(-3px);
+}
+
+.generate{
+    background:#16a34a;
+    color:white;
+}
+
+.generate:hover{
+    background:#15803d;
+}
+
+.download{
+    background:#f59e0b;
+    color:white;
+}
+
+.download:hover{
+    background:#d97706;
+}
+
+.reset{
+    background:#dc2626;
+    color:white;
+}
+
+.reset:hover{
+    background:#b91c1c;
+}
+
+.error{
+    margin-top:15px;
+    color:#ffe600;
+    font-weight:bold;
+    text-align:center;
+}
+
+.result{
+    margin-top:25px;
+    background:white;
+    color:black;
+    border-radius:10px;
+    padding:20px;
+    max-height:350px;
+    overflow:auto;
+}
+
+.message{
+    text-align:center;
+    color:gray;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:12px;
+}
+
+td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+tr:nth-child(even){
+    background:#f3f4f6;
+}
+
+tr:hover{
+    background:#dbeafe;
+}
+
+.footer{
+    margin-top:20px;
+    text-align:center;
+    font-size:14px;
+    opacity:.8;
+}
+
+@media(max-width:700px){
+
+.container{
+    width:100%;
+}
+
+.buttons{
+    flex-direction:column;
+}
+
+button{
+    width:100%;
+}
+
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1> Multiplication Table Generator</h1>
+
+    <label for="number">Enter Number</label>
+    <input type="number" id="number" placeholder="Example : 12">
+
+    <label for="limit">Enter Limit</label>
+    <input type="number" id="limit" placeholder="Example : 20">
+
+    <div class="buttons">
+
+        <button class="generate" id="generateBtn">
+            Generate
+        </button>
+
+        <button class="download" id="downloadBtn">
+            Download
+        </button>
+
+        <button class="reset" id="resetBtn">
+            Reset
+        </button>
+
+    </div>
+
+    <div id="error" class="error"></div>
+
+    <div class="result" id="output">
+
+        <p class="message">
+            Your multiplication table will appear here.
+        </p>
+
+    </div>
+
+    <div class="footer">
+
+        &copy; 2026 Multiplication Table Generator
+
+    </div>
+
+</div>
+
+<script>
+    const numberInput = document.getElementById("number");
+const limitInput = document.getElementById("limit");
+const output = document.getElementById("output");
+const error = document.getElementById("error");
+
+const generateBtn = document.getElementById("generateBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const resetBtn = document.getElementById("resetBtn");
+
+generateBtn.addEventListener("click", generateTable);
+downloadBtn.addEventListener("click", downloadTable);
+resetBtn.addEventListener("click", resetTable);
+
+function generateTable() {
+
+    output.innerHTML = "";
+    error.textContent = "";
+
+    let number = Number(numberInput.value);
+    let limit = Number(limitInput.value);
+
+    if (numberInput.value === "" || limitInput.value === "") {
+        error.textContent = " Please enter both Number and Limit.";
+        return;
+    }
+
+    if (number <= 0 || limit <= 0) {
+        error.textContent = "⚠ Values must be greater than zero.";
+        return;
+    }
+
+    const table = document.createElement("table");
+
+    const headerRow = document.createElement("tr");
+
+    const headings = ["Number", "Expression", "Result"];
+
+    for (let i = 0; i < headings.length; i++) {
+
+        const th = document.createElement("th");
+        th.textContent = headings[i];
+        headerRow.appendChild(th);
+
+    }
+
+    table.appendChild(headerRow);
+
+    for (let i = 1; i <= limit; i++) {
+
+        const row = document.createElement("tr");
+
+        const cell1 = document.createElement("td");
+        cell1.textContent = number;
+
+        const cell2 = document.createElement("td");
+        cell2.textContent = number + " × " + i;
+
+        const cell3 = document.createElement("td");
+        cell3.textContent = number * i;
+
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+
+        table.appendChild(row);
+
+    }
+
+    output.appendChild(table);
+
+}
+
+
+function resetTable() {
+
+    numberInput.value = "";
+    limitInput.value = "";
+
+    error.textContent = "";
+
+    output.innerHTML = "";
+
+    const message = document.createElement("p");
+    message.className = "message";
+    message.textContent = "Your multiplication table will appear here.";
+
+    output.appendChild(message);
+
+}
+
+function downloadTable() {
+
+    let number = Number(numberInput.value);
+    let limit = Number(limitInput.value);
+
+    if (numberInput.value === "" || limitInput.value === "") {
+
+        alert("Please generate the table first.");
+        return;
+
+    }
+
+    let report = "";
+    report += "=========================================\n";
+    report += "     MULTIPLICATION TABLE REPORT\n";
+    report += "=========================================\n\n";
+
+    report += "Number : " + number + "\n";
+    report += "Limit  : " + limit + "\n";
+    report += "Date   : " + new Date().toLocaleString() + "\n\n";
+
+    report += "-----------------------------------------\n";
+
+    for (let i = 1; i <= limit; i++) {
+
+        report += number + " × " + i + " = " + (number * i) + "\n";
+
+    }
+
+    report += "\n=========================================";
+
+    const blob = new Blob([report], { type: "text/plain" });
+
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+
+    link.download = "Multiplication_Table_Report.txt";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(link.href);
+
+}
+</script>
+
+</body>
+</html>
